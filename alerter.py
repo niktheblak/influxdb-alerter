@@ -2,6 +2,7 @@ import logging
 import smtplib
 from datetime import datetime, timedelta
 from pathlib import Path
+from email.message import EmailMessage
 
 import confuse
 import pytz
@@ -18,14 +19,17 @@ def age(point):
 
 
 def send_email(cfg, last_measurement_ts):
-    with smtplib.SMTP_SSL(cfg['smtp']['host'].get(str), cfg['smtp']['port'].get(465)) as s:
-        s.ehlo()
+    with smtplib.SMTP(cfg['smtp']['host'].get(str), cfg['smtp']['port'].get(465)) as s:
+        msg = EmailMessage()
+        msg.set_charset('UTF-8')
+        msg.set_content(f"There has been no new measurements in InfluxDB since {last_measurement_ts.ctime()}.")
+        msg['Subject'] = "No new InfluxDB measurements"
+        msg['From'] = cfg['smtp']['from'].get(str)
+        msg['To'] = cfg['smtp']['to'].get(str)
+        s.starttls()
         s.login(cfg['smtp']['username'].get(str),
                 cfg['smtp']['password'].get(str))
-        from_email = cfg['smtp.from'].get(str)
-        to_email = cfg['smtp.to'].get(str)
-        msg = f"There has been no new measurements in InfluxDB since {last_measurement_ts.ctime()}."
-        s.sendmail(from_email, to_email, msg)
+        s.send_message(msg)
 
 
 logging.basicConfig(level=logging.INFO)
