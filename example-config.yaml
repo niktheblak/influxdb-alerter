@@ -1,4 +1,5 @@
 max_age: 600
+email_sent_file: influxdb-alerter.email.sent
 influxdb:
   host: localhost
   port: 8086
