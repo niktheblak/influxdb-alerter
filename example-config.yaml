@@ -1,14 +1,17 @@
 max_age: 600
-email_sent_file: influxdb-alerter.email.sent
+email:
+  enabled: true
+  sent_file: influxdb-alerter.email.sent
+  host: smtp.mailserver.com
+  port: 587
+  username: user
+  password: pass
+  from: from@localhost
+  to: to@localhost
 influxdb:
   host: localhost
   port: 8086
   database: ruuvitag
   measurement: ruuvitag_sensor
-  username: user
-  password: pass
-smtp:
-  host: smtp.purelymail.com
-  port: 587
   username: user
   password: pass
