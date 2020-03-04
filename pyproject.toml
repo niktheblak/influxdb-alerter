@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "influxdb-alerter"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Niko Korhonen <1004138+niktheblak@users.noreply.github.com>"]
 
