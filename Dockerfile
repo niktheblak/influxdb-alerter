@@ -1,4 +1,4 @@
-FROM python:3.8 AS builder
+FROM python:3.9 AS builder
 
 WORKDIR /app
 RUN pip install --no-cache-dir poetry
@@ -6,7 +6,7 @@ ADD . .
 RUN poetry build
 RUN poetry export -f requirements.txt -o /app/dist/requirements.txt
 
-FROM python:3.8-slim-buster AS runner
+FROM python:3.9-slim-buster AS runner
 COPY --from=builder /app/dist/* /dist/
 RUN pip install --no-cache-dir -r /dist/requirements.txt
 RUN pip install --no-index --find-links=file:///dist/ influxdb-alerter
