@@ -1,14 +1,7 @@
-FROM python:3.9 AS builder
+FROM python:3.9-slim-buster
 
 WORKDIR /app
-RUN pip install --no-cache-dir poetry
 ADD . .
-RUN poetry build
-RUN poetry export -f requirements.txt -o /app/dist/requirements.txt
-
-FROM python:3.9-slim-buster AS runner
-COPY --from=builder /app/dist/* /dist/
-RUN pip install --no-cache-dir -r /dist/requirements.txt
-RUN pip install --no-index --find-links=file:///dist/ influxdb-alerter
+RUN pip install --no-cache-dir -r requirements.txt
 VOLUME /root/.config/influxdb-alerter
 CMD ["python", "-m", "influxdb_alerter"]
