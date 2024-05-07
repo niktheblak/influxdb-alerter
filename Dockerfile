@@ -1,7 +1,10 @@
-FROM python:3.11-slim-buster
+FROM python:3.12-slim
 
 WORKDIR /app
-ADD . .
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
 VOLUME /root/.config/influxdb-alerter
+
 CMD ["python", "-m", "influxdb_alerter"]
