@@ -56,6 +56,7 @@ var checkCmd = &cobra.Command{
 			Token:       viper.GetString("influxdb.token"),
 			Bucket:      viper.GetString("influxdb.bucket"),
 			Measurement: viper.GetString("influxdb.measurement"),
+			Since:       viper.GetDuration("max_age"),
 		}
 		logger.Info("Using config", "config", cfg)
 		c, err := checker.New(cfg, logger)
@@ -93,6 +94,8 @@ func notify(ctx context.Context, message string) error {
 }
 
 func init() {
+	checkCmd.Flags().Duration("max_age", 0, "threshold measurement age for triggering notification")
+
 	checkCmd.Flags().String("influxdb.addr", "", "InfluxDB server address")
 	checkCmd.Flags().String("influxdb.org", "", "InfluxDB organization")
 	checkCmd.Flags().String("influxdb.token", "", "InfluxDB token")
@@ -115,6 +118,7 @@ func init() {
 
 	cobra.CheckErr(viper.BindPFlags(checkCmd.Flags()))
 
+	viper.SetDefault("max_age", 30*time.Minute)
 	viper.SetDefault("influxdb.addr", "http://127.0.0.1:8086")
 	viper.SetDefault("influxdb.bucket", "ruuvitag")
 	viper.SetDefault("influxdb.measurement", "ruuvitag")
