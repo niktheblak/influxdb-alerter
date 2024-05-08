@@ -24,6 +24,9 @@ var (
 	ErrNoResults = errors.New("query returned no results")
 )
 
+// Now the now function to override in unit tests
+var Now = time.Now
+
 type ErrNoRecentData struct {
 	Since time.Time
 }
@@ -96,10 +99,12 @@ func (c *checker) Check(ctx context.Context) (err error) {
 		err = ErrNoResults
 		return
 	}
-	newest := r.Time()
+	newest := r.Time().UTC()
 	c.logger.Info("Most recent result", "ts", newest)
-	now := time.Now()
-	if newest.Before(now.Add(-c.cfg.Since)) {
+	now := Now().UTC()
+	cutoff := now.Add(-c.cfg.Since)
+	c.logger.Debug("Cutoff time", "ts", cutoff)
+	if newest.Before(cutoff) {
 		err = &ErrNoRecentData{Since: newest}
 		return
 	}
