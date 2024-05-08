@@ -44,9 +44,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file path")
 	rootCmd.PersistentFlags().StringVar(&logLevel, "loglevel", "info", "log level")
 
-	if err := viper.BindPFlags(rootCmd.PersistentFlags()); err != nil {
-		panic(err)
-	}
+	cobra.CheckErr(viper.BindPFlags(rootCmd.PersistentFlags()))
+
 	viper.SetDefault("loglevel", "info")
 }
 
