@@ -1,17 +1,21 @@
-max_age: 600
+max_age: "1h"
+loglevel: error
+
 email:
   enabled: true
-  sent_file: influxdb-alerter.email.sent
   host: smtp.mailserver.com
   port: 587
   username: user
   password: pass
   from: from@localhost
   to: to@localhost
+
+console:
+  enabled: true
+
 influxdb:
-  host: localhost
-  port: 8086
+  addr: http://localhost:8086
   database: ruuvitag
-  measurement: ruuvitag_sensor
+  measurement: ruuvitag
   username: user
   password: pass
