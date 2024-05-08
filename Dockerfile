@@ -1,10 +1,14 @@
-FROM python:3.12-slim
+FROM golang:1.22 as build
 
-WORKDIR /app
+ENV DEBIAN_FRONTEND=noninteractive
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-VOLUME /root/.config/influxdb-alerter
+WORKDIR /go/src/app
 
-CMD ["python", "-m", "influxdb_alerter"]
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+ADD . .
+RUN go build -v -o /go/bin/app
+
+FROM ubuntu:latest
+COPY --from=build /go/bin/app /
+ENTRYPOINT ["/app", "check"]
