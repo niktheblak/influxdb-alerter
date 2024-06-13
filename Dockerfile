@@ -1,12 +1,10 @@
 FROM golang:1.22 as build
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 WORKDIR /go/src/app
 
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
-ADD . .
+COPY . .
 RUN go build -v -o /go/bin/app
 
 FROM ubuntu:latest
