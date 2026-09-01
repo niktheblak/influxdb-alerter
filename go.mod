@@ -2,7 +2,7 @@ module github.com/niktheblak/influxdb-alerter
 
 go 1.22
 
-toolchain go1.22.3
+toolchain go1.27.1
 
 require (
 	github.com/influxdata/influxdb-client-go/v2 v2.13.0
